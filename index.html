@@ -3,32 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>McDonald's Dashboard Wireframes (with Charts)</title>
+    <title>McDonald's Dashboard Wireframes (Dark Mode)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Base styles */
+        /* Base styles - Dark Mode */
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #1f2937; /* bg-gray-800 */
+            color: #d1d5db; /* text-gray-300 */
         }
         .card {
-            background-color: #ffffff;
-            border: 1px solid #e2e8f0;
+            background-color: #374151; /* bg-gray-700 */
+            border: 1px solid #4b5563; /* border-gray-600 */
             padding: 1.5rem;
             border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.2); /* Adjusted shadow for dark */
             transition: box-shadow 0.3s ease-in-out;
             display: flex;
             flex-direction: column;
         }
         .card:hover {
-             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3); /* Adjusted shadow for dark */
         }
         .card-title {
             font-size: 0.875rem;
             font-weight: 500;
-            color: #64748b;
+            color: #9ca3af; /* text-gray-400 */
             margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
@@ -36,7 +38,7 @@
         }
          .card-title .icon {
             margin-right: 0.5rem;
-            color: #94a3b8;
+            color: #9ca3af; /* text-gray-400 */
          }
         .card-content {
             flex-grow: 1;
@@ -44,99 +46,112 @@
         .kpi-value {
             font-size: 1.875rem;
             font-weight: 700;
-            color: #1e293b;
+            color: #f3f4f6; /* text-gray-100 */
             line-height: 1.2;
         }
         .kpi-subtext {
             font-size: 0.75rem;
-            color: #64748b;
+            color: #9ca3af; /* text-gray-400 */
             margin-top: 0.25rem;
         }
-        /* Placeholder for Map */
-        .placeholder-map {
-            background-color: #f1f5f9;
-            border: 1px dashed #cbd5e1;
+         /* Visual Map Placeholder - Dark */
+        .visual-map-placeholder {
+            background-color: #4b5563; /* bg-gray-600 */
+            border: 1px solid #6b7280; /* border-gray-500 */
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 120px;
+            min-height: 200px;
             text-align: center;
-            color: #94a3b8;
+            color: #d1d5db; /* text-gray-300 */
             border-radius: 0.375rem;
             padding: 1rem;
             font-size: 0.875rem;
             width: 100%;
+            position: relative;
         }
-        /* Simple Gauge CSS */
+         /* Simple dots on the map - same colors, should contrast ok */
+         .map-dot { position: absolute; width: 8px; height: 8px; border-radius: 50%; background-color: #ef4444; }
+         .map-dot.green { background-color: #22c55e; }
+         .map-dot.yellow { background-color: #f59e0b; }
+        /* Simple Gauge CSS - Dark */
         .gauge-container {
             width: 120px;
-            height: 60px; /* Half circle */
+            height: 60px;
             border-radius: 120px 120px 0 0;
-            background-color: #e5e7eb; /* Gray background */
+            background-color: #4b5563; /* bg-gray-600 */
             position: relative;
             overflow: hidden;
-            margin: 1rem auto 0.5rem; /* Center gauge */
+            margin: 1rem auto 0.5rem;
         }
         .gauge-fill {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #f59e0b; /* Amber fill */
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
+            background-color: #facc15; /* yellow-400 for better contrast */
             transform-origin: center bottom;
-             /* Example: 50% = 90deg rotation */
             transform: rotate(calc(1.8deg * var(--gauge-percent, 0)));
         }
         .gauge-cover {
-            position: absolute;
-            bottom: 0;
-            left: 5%; /* Indent slightly */
-            width: 90%;
-            height: 90%;
-            background-color: #ffffff; /* Cover matches card bg */
+            position: absolute; bottom: 0; left: 5%; width: 90%; height: 90%;
+            background-color: #374151; /* Cover matches card bg */
             border-radius: 120px 120px 0 0;
         }
-        /* Alert styling */
+        /* Alert styling - Dark */
         .alert-item {
-            background-color: #fef2f2;
-            border-left: 4px solid #ef4444;
-            color: #7f1d1d;
+            background-color: #450a0a; /* Darker red bg */
+            border-left: 4px solid #f87171; /* Lighter red border */
+            color: #fecaca; /* Light red text */
             padding: 0.75rem 1rem;
             margin-bottom: 0.5rem;
             border-radius: 0 0.375rem 0.375rem 0;
             font-size: 0.875rem;
         }
-        /* Status indicators */
-        .status-on { color: #16a34a; font-weight: 600; }
-        .status-off { color: #dc2626; font-weight: 600; }
-        .perf-indicator-up { color: #dc2626; }
-        .perf-indicator-down { color: #16a34a; }
-        /* Table styling */
-        .styled-table { width: 100%; border-collapse: collapse; }
-        .styled-table thead { background-color: #f1f5f9; color: #475569; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .styled-table th, .styled-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; text-align: left; white-space: nowrap; }
+        /* Status indicators - Dark */
+        .status-on { color: #4ade80; /* text-green-400 */ font-weight: 600; }
+        .status-off { color: #f87171; /* text-red-400 */ font-weight: 600; }
+        .perf-indicator-up { color: #f87171; /* text-red-400 */ }
+        .perf-indicator-down { color: #4ade80; /* text-green-400 */ }
+        /* Table styling - Dark */
+        .styled-table { width: 100%; border-collapse: collapse; color: #d1d5db; /* text-gray-300 */ }
+        .styled-table thead { background-color: #4b5563; /* bg-gray-600 */ color: #e5e7eb; /* text-gray-200 */ font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .styled-table th, .styled-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #4b5563; /* border-gray-600 */ text-align: left; white-space: nowrap; }
         .styled-table th { font-weight: 600; }
-        .styled-table tbody tr:hover { background-color: #f8fafc; }
+        .styled-table tbody tr:hover { background-color: #4b5563; /* hover:bg-gray-600 */ }
         .styled-table .text-right { text-align: right; }
-        .styled-table .sortable:hover { cursor: pointer; background-color: #e2e8f0; }
+        .styled-table .sortable:hover { cursor: pointer; background-color: #525f75; }
+        /* Floor selector styling - Dark */
+        .floor-selector {
+            background-color: #4b5563; /* bg-gray-600 */
+            color: #e5e7eb; /* text-gray-200 */
+            padding: 0.3rem 0.6rem;
+            border: 1px solid #6b7280; /* border-gray-500 */
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            margin-left: auto; /* Push to the right */
+        }
 
-         /* Icon placeholders */
+         /* Icon placeholders - colors adjusted slightly for dark */
          .icon::before { display: inline-block; font-weight: bold; margin-right: 0.5rem; width: 1em; text-align: center; }
-         .icon-power::before { content: "⚡"; color: #f59e0b; }
-         .icon-temp::before { content: "🌡️"; color: #3b82f6; }
-         .icon-hvac::before { content: "❄️"; color: #0ea5e9; }
-         .icon-alert::before { content: "⚠️"; color: #ef4444; }
-         .icon-energy::before { content: "💡"; color: #f59e0b; }
-         .icon-gas::before { content: "🔥"; color: #f97316; }
-         .icon-chart-pie::before { content: "📊"; color: #10b981; }
-         .icon-chart-line::before { content: "📈"; color: #10b981; }
-         .icon-performance::before { content: "🎯"; color: #8b5cf6; }
-         .icon-time::before { content: "⏱️"; color: #64748b; }
-         .icon-map::before { content: "🗺️"; color: #0ea5e9; }
-         .icon-list::before { content: "📋"; color: #64748b; }
-         .icon-ranking::before { content: "🏆"; color: #f59e0b; }
-         .icon-chart-bar::before { content: "📊"; color: #10b981; }
+         .icon-power::before { content: "⚡"; color: #facc15; } /* Yellow */
+         .icon-temp::before { content: "🌡️"; color: #60a5fa; } /* Light Blue */
+         .icon-hvac::before { content: "❄️"; color: #38bdf8; } /* Lighter Sky */
+         .icon-alert::before { content: "⚠️"; color: #f87171; } /* Light Red */
+         .icon-energy::before { content: "💡"; color: #facc15; } /* Yellow */
+         .icon-gas::before { content: "🔥"; color: #fb923c; } /* Light Orange */
+         .icon-chart-pie::before { content: "📊"; color: #34d399; } /* Light Emerald */
+         .icon-chart-line::before { content: "📈"; color: #34d399; } /* Light Emerald */
+         .icon-performance::before { content: "🎯"; color: #a78bfa; } /* Light Violet */
+         .icon-time::before { content: "⏱️"; color: #9ca3af; } /* Gray */
+         .icon-map::before { content: "🗺️"; color: #38bdf8; } /* Lighter Sky */
+         .icon-list::before { content: "📋"; color: #9ca3af; } /* Gray */
+         .icon-ranking::before { content: "🏆"; color: #facc15; } /* Yellow */
+         .icon-chart-bar::before { content: "📊"; color: #34d399; } /* Light Emerald */
+
+         /* Chart.js Global Defaults for Dark Mode */
+         :root {
+            --chart-font-color: #d1d5db; /* text-gray-300 */
+            --chart-grid-color: rgba(107, 114, 128, 0.3); /* gray-500 with alpha */
+         }
 
     </style>
      <!-- Link to Inter font -->
@@ -144,18 +159,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-slate-100 p-4 sm:p-6 lg:p-8 font-sans">
+<body class="bg-gray-800 text-gray-300 p-4 sm:p-6 lg:p-8 font-sans">
 
     <!-- I. Dashboard Components -->
-    <h1 class="text-3xl font-bold mb-6 text-gray-800 border-b pb-3">Dashboard Components</h1>
+    <h1 class="text-3xl font-bold mb-6 text-gray-100 border-b border-gray-600 pb-3">Dashboard Components</h1>
 
     <!-- A. Restaurant Manager Dashboard -->
     <div class="mb-12">
-        <h2 class="text-2xl font-semibold mb-2 text-blue-700">A. Restaurant Manager Dashboard</h2>
-        <p class="text-sm text-gray-600 mb-6">Focuses on the immediate operational status and performance of one specific restaurant (e.g., IN-MH-MUM-MMR-0252-RohitDT Mall).</p>
+        <h2 class="text-2xl font-semibold mb-2 text-blue-400">A. Restaurant Manager Dashboard</h2>
+        <p class="text-sm text-gray-400 mb-6">Focuses on the immediate operational status and performance of one specific restaurant (e.g., IN-MH-MUM-MMR-0252-RohitDT Mall).</p>
 
         <!-- Today's Snapshot -->
-        <h3 class="text-xl font-semibold mb-4 text-gray-700">Today's Snapshot (Near Real-Time from _LV)</h3>
+        <h3 class="text-xl font-semibold mb-4 text-gray-200">Today's Snapshot (Near Real-Time from _LV)</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div class="card">
                 <h4 class="card-title"><span class="icon icon-power"></span>Current Power Load (kW)</h4>
@@ -163,7 +178,7 @@
                     <!-- Simple CSS Gauge -->
                     <div class="gauge-container">
                         <div class="gauge-fill" style="--gauge-percent: 51;"></div> <!-- Example: 51% full -->
-                        <div class="gauge-cover"></div>
+                        <div class="gauge-cover" style="background-color: #374151;"></div> <!-- Match card bg -->
                     </div>
                     <p class="kpi-value text-center">28.7 kW</p>
                     <p class="kpi-subtext text-center">(Source: EB)</p>
@@ -172,16 +187,18 @@
             <div class="card">
                 <h4 class="card-title"><span class="icon icon-temp"></span>Key Temperatures (°C)</h4>
                 <div class="card-content space-y-2 mt-4 text-left">
-                    <p class="text-lg text-gray-700 flex justify-between">Kitchen: <span class="font-bold">34.1°C</span></p>
-                    <p class="text-lg text-gray-700 flex justify-between">Lobby AC Return: <span class="font-bold">25.6°C</span></p>
-                    <p class="text-lg text-gray-700 flex justify-between">Party Hall: <span class="font-bold text-orange-600">85.0°C</span></p>
+                    <p class="text-lg text-gray-300 flex justify-between">Kitchen: <span class="font-bold text-gray-100">34.1°C</span></p>
+                    <p class="text-lg text-gray-300 flex justify-between">Lobby AC Return: <span class="font-bold text-gray-100">25.6°C</span></p>
+                    <p class="text-lg text-gray-300 flex justify-between">Party Hall: <span class="font-bold text-orange-400">85.0°C</span></p>
                 </div>
             </div>
             <div class="card">
-                <h4 class="card-title"><span class="icon icon-hvac"></span>HVAC Status</h4>
+                 <!-- HVAC Status Card - aligned with DOC -->
+                <h4 class="card-title"><span><span class="icon icon-hvac"></span>HVAC Status</span></h4>
                  <div class="card-content space-y-3 mt-4 text-left">
                      <p class="text-lg">Unit Status: <span class="status-on">ON</span></p>
                      <p class="text-lg">Compressor Status: <span class="status-on">ON</span></p>
+                     <p class="text-xs text-gray-500 italic">(Showing status for main Lobby AC)</p>
                  </div>
             </div>
              <div class="card">
@@ -190,12 +207,12 @@
                      <div class="alert-item">Lobby AC 3 - Return Temp High - 04:30 PM</div>
                      <p class="text-sm text-gray-500 italic mt-2">1 active critical alert.</p>
                 </div>
-                 <a href="#" class="text-blue-600 hover:underline text-xs mt-3 inline-block font-medium flex-shrink-0">View Full Alert Log &rarr;</a>
+                 <a href="#" class="text-blue-400 hover:underline text-xs mt-3 inline-block font-medium flex-shrink-0">View Full Alert Log &rarr;</a>
             </div>
         </div>
 
         <!-- Daily Performance Summary -->
-        <h3 class="text-xl font-semibold mb-4 text-gray-700">Daily Performance Summary (from _DR, _PB - Yesterday: 2023-03-31)</h3>
+        <h3 class="text-xl font-semibold mb-4 text-gray-200">Daily Performance Summary (from _DR, _PB - Yesterday: 2023-03-31)</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
              <div class="card">
                 <h4 class="card-title"><span class="icon icon-energy"></span>Energy Consumption (kWh)</h4>
@@ -207,16 +224,15 @@
             <div class="card">
                 <h4 class="card-title"><span class="icon icon-gas"></span>LPG Consumption (Kgs)</h4>
                 <div class="card-content">
-                     <!-- Synthetic Data -->
                     <p class="kpi-value">22.5</p>
-                     <p class="kpi-subtext">(Illustrative)</p>
+                    <p class="kpi-subtext">(Illustrative)</p>
                 </div>
             </div>
              <div class="card">
                  <h4 class="card-title"><span class="icon icon-chart-pie"></span>Energy Use: OPR vs NON</h4>
                  <div class="card-content">
                     <canvas id="oprNonOprChart" class="max-h-[150px] my-3"></canvas>
-                    <p class="text-sm text-red-600 font-medium mt-1 text-center">Non-OPR Waste: 142.5 kWh</p>
+                    <p class="text-sm text-red-400 font-medium mt-1 text-center">Non-OPR Waste: 142.5 kWh</p>
                  </div>
             </div>
              <div class="card">
@@ -229,7 +245,7 @@
         </div>
 
         <!-- Recent Trends -->
-        <h3 class="text-xl font-semibold mb-4 text-gray-700">Recent Trends (Last 7 Days from _DR - Illustrative)</h3>
+        <h3 class="text-xl font-semibold mb-4 text-gray-200">Recent Trends (Last 7 Days from _DR - Illustrative)</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="card">
                 <h4 class="card-title"><span class="icon icon-chart-line"></span>Daily Energy (kWh)</h4>
@@ -252,7 +268,7 @@
         </div>
 
         <!-- Equipment Health Indicators -->
-        <h3 class="text-xl font-semibold mb-4 text-gray-700">Equipment Health Indicators (Yesterday - from _DR, _HR summaries)</h3>
+        <h3 class="text-xl font-semibold mb-4 text-gray-200">Equipment Health Indicators (Yesterday - from _DR, _HR summaries)</h3>
          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
              <div class="card">
                 <h4 class="card-title"><span class="icon icon-time"></span>HVAC Run Time (Lobby AC 3)</h4>
@@ -274,40 +290,68 @@
     </div>
 
     <!-- B. Area/Regional Manager Dashboard -->
-    <div class="mt-12 card p-0"> <!-- Card for overall container -->
-         <div class="px-6 pt-6 pb-3 border-b border-slate-200">
-            <h2 class="text-2xl font-semibold mb-2 text-blue-700">B. Area/Regional Manager Dashboard</h2>
-            <p class="text-sm text-gray-600 mb-2">Focuses on comparing performance and identifying outliers across multiple restaurants.</p>
+    <div class="mt-12 card p-0 !bg-gray-800 border-gray-700"> <!-- Darker container for region -->
+         <div class="px-6 pt-6 pb-3 border-b border-gray-700">
+            <h2 class="text-2xl font-semibold mb-2 text-blue-300">B. Area/Regional Manager Dashboard</h2>
+            <p class="text-sm text-gray-400 mb-2">Focuses on comparing performance and identifying outliers across multiple restaurants.</p>
          </div>
 
-        <!-- Regional Overview -->
+        <!-- Regional Overview - Aligned with DOC -->
         <div class="p-6">
-            <h3 class="text-xl font-semibold mb-4 text-gray-700">Regional Overview (MTD from _MP, _PB, _MD - Sample Mar 1st)</h3>
+            <h3 class="text-xl font-semibold mb-4 text-gray-100">Regional Overview (MTD from _MP, _PB, _MD - Sample Mar 1st)</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                 <!-- Map View Added Back -->
                  <div class="card lg:col-span-2 !p-3">
                      <h4 class="card-title mb-2"><span class="icon icon-map"></span>Site Status Map</h4>
-                     <div class="placeholder-map min-h-[200px]">[Interactive Map Visualization]</div>
+                     <div class="visual-map-placeholder">
+                         <span class="map-dot green" style="top: 20%; left: 30%;"></span>
+                         <span class="map-dot red" style="top: 40%; left: 65%;"></span>
+                         <span class="map-dot yellow" style="top: 70%; left: 40%;"></span>
+                         <span class="map-dot green" style="top: 55%; left: 15%;"></span>
+                         <span class="font-semibold text-lg text-gray-200">Site Status Overview</span>
+                         <span class="text-xs mt-1 text-gray-400">(Visual Representation of Map)</span>
+                     </div>
                 </div>
+                <!-- Regional KPIs Card -->
                 <div class="card space-y-3">
                      <h4 class="card-title"><span class="icon icon-chart-bar"></span>Regional KPIs (MTD)</h4>
-                     <p class="text-lg">Total Energy: <span class="font-bold text-blue-700">~150,500 kWh</span></p>
-                     <p class="text-lg">Total LPG: <span class="font-bold text-blue-700">~5,200 Kgs</span></p>
-                     <p class="text-lg">Data Gaps (Mar 1): <span class="font-bold text-red-600">2 Sites</span></p>
-                     <p class="text-lg">Avg. Non-OPR Waste: <span class="font-bold text-orange-600">~18%</span></p>
+                     <p class="text-lg">Total Energy: <span class="font-bold text-blue-300">~150,500 kWh</span></p>
+                     <p class="text-lg">Total LPG: <span class="font-bold text-blue-300">~5,200 Kgs</span></p>
+                     <p class="text-lg">Data Gaps (Mar 1): <span class="font-bold text-red-400">2 Sites</span></p>
+                     <p class="text-lg">Avg. Non-OPR Waste: <span class="font-bold text-orange-400">~18%</span></p>
                 </div>
+                <!-- Communication Status List -->
                  <div class="card">
-                    <h4 class="card-title"><span class="icon icon-alert"></span>Alert Summary</h4>
-                    <div class="card-content mt-3 space-y-2 text-sm">
-                        <p>Total Active Alerts: <span class="font-bold text-orange-600">5</span></p>
-                        <p class="font-medium mt-2">Critical Alerts by Site:</p>
-                        <ul class="list-disc list-inside text-xs pl-2 max-h-24 overflow-y-auto">
-                            <li>...0254-LB Nagar: 1</li>
-                            <li>...0007-Cross Road: 2</li>
-                            <li>...0211-Adyar: 1</li>
-                            <li>...0138-Hitech City: 1</li>
+                    <h4 class="card-title"><span class="icon icon-list"></span>Communication Status (Mar 1st)</h4>
+                    <div class="card-content">
+                        <ul class="list-disc list-inside text-sm mt-3 max-h-40 overflow-y-auto pr-2 space-y-1">
+                            <li class="text-red-400">IN-MH-PUN-MMR-0358...: <span class="font-semibold">Data Gap (165)</span></li>
+                            <li class="text-red-400">IN-KA-BGL-SOU-0066...: <span class="font-semibold">Data Gap (568)</span></li>
+                            <li>IN-MH-MUM-MMR-0275...: OK</li>
+                            <li>IN-GJ-AHM-ROW-0337...: OK</li>
+                            <li>IN-TN-CHN-SOU-0154...: OK</li>
+                             <li>(Showing top 5)</li>
                         </ul>
-                        <p class="font-medium mt-2">Most Common:</p>
-                        <p class="text-xs">HVAC Temp High, PF Low</p>
+                    </div>
+                </div>
+                <!-- Alert Summary Card -->
+                 <div class="card lg:col-span-4"> <!-- Span full width below others -->
+                    <h4 class="card-title"><span class="icon icon-alert"></span>Alert Summary</h4>
+                    <div class="card-content mt-3 space-y-2 text-sm grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                             <p>Total Active Alerts: <span class="font-bold text-orange-400">5</span></p>
+                             <p class="font-medium mt-2 text-gray-200">Most Common:</p>
+                             <p class="text-xs">HVAC Temp High, PF Low</p>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-200">Critical Alerts by Site:</p>
+                            <ul class="list-disc list-inside text-xs pl-2 max-h-24 overflow-y-auto">
+                                <li>...0254-LB Nagar: 1</li>
+                                <li>...0007-Cross Road: 2</li>
+                                <li>...0211-Adyar: 1</li>
+                                <li>...0138-Hitech City: 1</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -315,7 +359,7 @@
 
         <!-- Restaurant Ranking & Comparison -->
         <div class="px-6">
-            <h3 class="text-xl font-semibold mb-4 text-gray-700">Restaurant Ranking & Comparison (MTD from _MP, _PB, _MD - Sample Mar 1st)</h3>
+            <h3 class="text-xl font-semibold mb-4 text-gray-100">Restaurant Ranking & Comparison (MTD from _MP, _PB, _MD - Sample Mar 1st)</h3>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <div class="card overflow-hidden p-0">
                     <h4 class="card-title px-6 pt-6 pb-2"><span class="icon icon-ranking"></span>Energy Performance (KVAH)</h4>
@@ -331,33 +375,33 @@
                             </thead>
                             <tbody class="text-sm">
                                 <tr >
-                                    <td class="font-medium">...0254-LB Nagar</td>
+                                    <td class="font-medium text-gray-100">...0254-LB Nagar</td>
                                     <td class="text-right">477.4</td>
                                     <td class="text-right perf-indicator-up">-59.9 ▲</td>
                                     <td class="text-right">28.1%</td>
                                 </tr>
                                 <tr>
-                                    <td class="font-medium">...0322-Jubilee Hills</td>
+                                    <td class="font-medium text-gray-100">...0322-Jubilee Hills</td>
                                     <td class="text-right">461.1</td>
                                     <td class="text-right perf-indicator-down">+75.9 ▼</td>
                                     <td class="text-right">25.9%</td>
                                 </tr>
                                  <tr>
-                                    <td class="font-medium">...0007-Cross Road</td>
+                                    <td class="font-medium text-gray-100">...0007-Cross Road</td>
                                     <td class="text-right">~1034</td>
-                                    <td class="text-right">N/A</td>
+                                    <td class="text-right text-gray-400">N/A</td>
                                     <td class="text-right">~33%</td>
                                 </tr>
                                  <tr>
-                                    <td class="font-medium">...0211-Adyar</td>
+                                    <td class="font-medium text-gray-100">...0211-Adyar</td>
                                     <td class="text-right">~746</td>
                                     <td class="text-right perf-indicator-down">+4 ▼</td>
                                     <td class="text-right">~18%</td>
                                 </tr>
                                  <tr>
-                                    <td class="font-medium">...0108-Pegasus</td>
+                                    <td class="font-medium text-gray-100">...0108-Pegasus</td>
                                     <td class="text-right">~90</td>
-                                    <td class="text-right">N/A</td>
+                                    <td class="text-right text-gray-400">N/A</td>
                                     <td class="text-right">~28%</td>
                                 </tr>
                             </tbody>
@@ -377,27 +421,27 @@
                             </thead>
                              <tbody class="text-sm">
                                 <tr>
-                                    <td class="font-medium">...0254-LB Nagar</td>
+                                    <td class="font-medium text-gray-100">...0254-LB Nagar</td>
                                     <td class="text-right">18.4</td>
                                     <td class="text-right perf-indicator-up">-2.7 ▲</td>
                                 </tr>
                                 <tr>
-                                    <td class="font-medium">...0322-Jubilee Hills</td>
+                                    <td class="font-medium text-gray-100">...0322-Jubilee Hills</td>
                                     <td class="text-right">17.1</td>
                                     <td class="text-right perf-indicator-up">-1.4 ▲</td>
                                 </tr>
                                  <tr>
-                                    <td class="font-medium">...0007-Cross Road</td>
+                                    <td class="font-medium text-gray-100">...0007-Cross Road</td>
                                     <td class="text-right">25.2</td>
                                     <td class="text-right perf-indicator-up">+3.2 ▲</td>
                                 </tr>
                                  <tr>
-                                    <td class="font-medium">...0211-Adyar</td>
+                                    <td class="font-medium text-gray-100">...0211-Adyar</td>
                                     <td class="text-right">19.8</td>
                                     <td class="text-right perf-indicator-down">-1.2 ▼</td>
                                 </tr>
                                  <tr>
-                                    <td class="font-medium">...0108-Pegasus</td>
+                                    <td class="font-medium text-gray-100">...0108-Pegasus</td>
                                     <td class="text-right">15.5</td>
                                     <td class="text-right perf-indicator-down">-0.5 ▼</td>
                                 </tr>
@@ -410,8 +454,8 @@
 
         <!-- Key Equipment Benchmarking -->
         <div class="p-6">
-            <h3 class="text-xl font-semibold mb-4 text-gray-700">Key Equipment Benchmarking (MTD from _DR, _MD summaries - Illustrative)</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <h3 class="text-xl font-semibold mb-4 text-gray-100">Key Equipment Benchmarking (MTD from _DR, _MD summaries - Illustrative)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6"> <!-- Adjusted grid -->
                  <div class="card">
                     <h4 class="card-title"><span class="icon icon-chart-bar"></span>Avg. Daily HVAC Compressor Run Time</h4>
                     <div class="card-content">
@@ -424,19 +468,6 @@
                         <canvas id="kitchenEnergyChart"></canvas>
                     </div>
                 </div>
-                 <div class="card">
-                    <h4 class="card-title"><span class="icon icon-list"></span>Communication Status (Mar 1st)</h4>
-                    <div class="card-content">
-                        <ul class="list-disc list-inside text-sm mt-3 max-h-40 overflow-y-auto pr-2 space-y-1">
-                            <li class="text-red-600">IN-MH-PUN-MMR-0358...: <span class="font-semibold">Data Gap (165)</span></li>
-                            <li class="text-red-600">IN-KA-BGL-SOU-0066...: <span class="font-semibold">Data Gap (568)</span></li>
-                            <li>IN-MH-MUM-MMR-0275...: OK</li>
-                            <li>IN-GJ-AHM-ROW-0337...: OK</li>
-                            <li>IN-TN-CHN-SOU-0154...: OK</li>
-                             <li>(Showing top 5)</li>
-                        </ul>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -444,6 +475,11 @@
     <!-- Script to Render Charts -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Set Chart.js defaults for dark mode
+            Chart.defaults.color = getComputedStyle(document.documentElement).getPropertyValue('--chart-font-color').trim();
+            Chart.defaults.borderColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-grid-color').trim();
+
+
             const ctxOprNonOpr = document.getElementById('oprNonOprChart')?.getContext('2d');
             const ctxDailyEnergy = document.getElementById('dailyEnergyChart')?.getContext('2d');
             const ctxDailyLpg = document.getElementById('dailyLpgChart')?.getContext('2d');
@@ -461,14 +497,14 @@
                         labels: ['Operating Hours (73.8%)', 'Non-Operating Hours (26.2%)'],
                         datasets: [{
                             label: 'Energy Use (kWh)',
-                            data: [402.6, 142.5], // From PB DayOpr/DayNonOpr for 2016000001 on 2023-03-31
+                            data: [402.6, 142.5],
                             backgroundColor: [
-                                'rgba(54, 162, 235, 0.7)', // Blue for Operating
-                                'rgba(255, 99, 132, 0.7)'  // Red for Non-Operating
+                                'rgba(96, 165, 250, 0.7)', // Light Blue for Operating
+                                'rgba(248, 113, 113, 0.7)'  // Light Red for Non-Operating
                             ],
                             borderColor: [
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 99, 132, 1)'
+                                '#60a5fa', // Blue-400
+                                '#f87171'  // Red-400
                             ],
                             borderWidth: 1
                         }]
@@ -476,7 +512,12 @@
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }
+                        plugins: {
+                            legend: {
+                                display: true, position: 'bottom',
+                                labels: { boxWidth: 10, font: { size: 10 }, color: '#d1d5db' } // Light text for legend
+                            }
+                        }
                     }
                 });
             }
@@ -486,16 +527,23 @@
                 new Chart(ctxDailyEnergy, {
                     type: 'line',
                     data: {
-                        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Yesterday'], // Replace with actual dates
+                        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Yesterday'],
                         datasets: [{
                             label: 'Total Energy (kWh)',
-                            data: [650, 680, 710, 690, 720, 700, 545.1], // Illustrative + Yesterday's value
-                            borderColor: 'rgb(75, 192, 192)',
+                            data: [650, 680, 710, 690, 720, 700, 545.1],
+                            borderColor: '#2dd4bf', // Teal-400
                             tension: 0.1,
                             fill: false
                         }]
                     },
-                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false } } }
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: false, ticks: { color: '#9ca3af' }, grid: { color: 'var(--chart-grid-color)' } }, // Gray ticks & grid
+                            x: { ticks: { color: '#9ca3af' }, grid: { color: 'var(--chart-grid-color)' } }
+                         }
+                    }
                 });
             }
 
@@ -507,13 +555,20 @@
                         labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Yesterday'],
                         datasets: [{
                             label: 'LPG (Kgs)',
-                            data: [21, 23, 22, 24, 23.5, 21.5, 22.5], // Illustrative
-                            borderColor: 'rgb(255, 159, 64)',
+                            data: [21, 23, 22, 24, 23.5, 21.5, 22.5],
+                            borderColor: '#fb923c', // Orange-400
                             tension: 0.1,
                             fill: false
                         }]
                     },
-                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false } } }
+                     options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: false, ticks: { color: '#9ca3af' }, grid: { color: 'var(--chart-grid-color)' } },
+                            x: { ticks: { color: '#9ca3af' }, grid: { color: 'var(--chart-grid-color)' } }
+                         }
+                    }
                 });
             }
 
@@ -525,13 +580,20 @@
                         labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Yesterday'],
                         datasets: [{
                             label: 'Peak Demand (kW)',
-                            data: [52, 55, 58, 56, 59, 57, 55.3], // Illustrative + Yesterday's max from _DR
-                            borderColor: 'rgb(255, 99, 132)',
+                            data: [52, 55, 58, 56, 59, 57, 55.3],
+                            borderColor: '#f87171', // Red-400
                             tension: 0.1,
                             fill: false
                         }]
                     },
-                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false } } }
+                     options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: false, ticks: { color: '#9ca3af' }, grid: { color: 'var(--chart-grid-color)' } },
+                            x: { ticks: { color: '#9ca3af' }, grid: { color: 'var(--chart-grid-color)' } }
+                         }
+                    }
                 });
             }
 
@@ -542,14 +604,21 @@
                 new Chart(ctxHvacRun, {
                     type: 'bar',
                     data: {
-                        labels: ['...RohitDT', '...LB Nagar', '...Jubilee Hills', '...Cross Road', '...Adyar'], // Shortened site names
+                        labels: ['...RohitDT', '...LB Nagar', '...Jubilee Hills', '...Cross Road', '...Adyar'],
                         datasets: [{
                             label: 'Avg Daily Compressor Runtime (hrs)',
-                            data: [0.4, 1.5, 1.2, 2.1, 1.8], // Illustrative Data
-                            backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                            data: [0.4, 1.5, 1.2, 2.1, 1.8],
+                            backgroundColor: 'rgba(96, 165, 250, 0.6)' // Light Blue
                         }]
                     },
-                    options: { responsive: true, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
+                    options: {
+                        responsive: true, indexAxis: 'y',
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { beginAtZero: true, ticks: { color: '#9ca3af' }, grid: { color: 'var(--chart-grid-color)' } },
+                            y: { ticks: { color: '#9ca3af' }, grid: { display: false } } // Hide y-axis grid lines for bar chart
+                        }
+                    }
                 });
             }
 
@@ -561,11 +630,18 @@
                         labels: ['...RohitDT', '...LB Nagar', '...Jubilee Hills', '...Cross Road', '...Adyar'],
                         datasets: [{
                             label: 'Avg Daily Kitchen Equip (kWh)',
-                            data: [360, 400, 380, 450, 410], // Illustrative Data
-                            backgroundColor: 'rgba(255, 159, 64, 0.6)'
+                            data: [360, 400, 380, 450, 410],
+                            backgroundColor: 'rgba(251, 146, 60, 0.6)' // Light Orange
                         }]
                     },
-                    options: { responsive: true, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
+                    options: {
+                         responsive: true, indexAxis: 'y',
+                        plugins: { legend: { display: false } },
+                         scales: {
+                            x: { beginAtZero: true, ticks: { color: '#9ca3af' }, grid: { color: 'var(--chart-grid-color)' } },
+                            y: { ticks: { color: '#9ca3af' }, grid: { display: false } }
+                        }
+                    }
                 });
             }
 
