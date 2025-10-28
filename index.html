@@ -3,273 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>McDonald's Dashboard Wireframes (Enhanced + Synthetic Data)</title>
+    <title>McDonald's Dashboard Wireframes (with Charts)</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* Base styles */
         body {
-            font-family: 'Inter', sans-serif; /* Using Inter font */
+            font-family: 'Inter', sans-serif;
         }
-        /* More distinct card styling */
         .card {
-            background-color: #ffffff; /* white */
-            border: 1px solid #e2e8f0; /* border-slate-200 */
-            padding: 1.5rem; /* p-6 */
-            border-radius: 0.5rem; /* rounded-lg */
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-md */
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             transition: box-shadow 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
         }
         .card:hover {
-             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* shadow-lg */
+             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
         .card-title {
-            font-size: 0.875rem; /* text-sm */
-            font-weight: 500; /* font-medium */
-            color: #64748b; /* text-slate-500 */
-            margin-bottom: 0.5rem; /* mb-2 */
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
+            flex-shrink: 0;
         }
          .card-title .icon {
-            margin-right: 0.5rem; /* mr-2 */
-            color: #94a3b8; /* text-slate-400 */
+            margin-right: 0.5rem;
+            color: #94a3b8;
          }
+        .card-content {
+            flex-grow: 1;
+        }
         .kpi-value {
-            font-size: 1.875rem; /* text-3xl */
-            font-weight: 700; /* font-bold */
-            color: #1e293b; /* text-slate-800 */
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1e293b;
             line-height: 1.2;
         }
         .kpi-subtext {
-            font-size: 0.75rem; /* text-xs */
-            color: #64748b; /* text-slate-500 */
-            margin-top: 0.25rem; /* mt-1 */
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 0.25rem;
         }
-        /* Placeholder refinement */
-        .placeholder-chart, .placeholder-gauge, .placeholder-map {
-            background-color: #f1f5f9; /* bg-slate-100 */
-            border: 1px dashed #cbd5e1; /* border-slate-300 */
+        /* Placeholder for Map */
+        .placeholder-map {
+            background-color: #f1f5f9;
+            border: 1px dashed #cbd5e1;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 120px;
             text-align: center;
-            color: #94a3b8; /* text-slate-400 */
-            border-radius: 0.375rem; /* rounded-md */
-            padding: 1rem; /* p-4 */
-            font-size: 0.875rem; /* text-sm */
+            color: #94a3b8;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            font-size: 0.875rem;
+            width: 100%;
+        }
+        /* Simple Gauge CSS */
+        .gauge-container {
+            width: 120px;
+            height: 60px; /* Half circle */
+            border-radius: 120px 120px 0 0;
+            background-color: #e5e7eb; /* Gray background */
+            position: relative;
+            overflow: hidden;
+            margin: 1rem auto 0.5rem; /* Center gauge */
+        }
+        .gauge-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f59e0b; /* Amber fill */
+            transform-origin: center bottom;
+             /* Example: 50% = 90deg rotation */
+            transform: rotate(calc(1.8deg * var(--gauge-percent, 0)));
+        }
+        .gauge-cover {
+            position: absolute;
+            bottom: 0;
+            left: 5%; /* Indent slightly */
+            width: 90%;
+            height: 90%;
+            background-color: #ffffff; /* Cover matches card bg */
+            border-radius: 120px 120px 0 0;
         }
         /* Alert styling */
         .alert-item {
-            background-color: #fef2f2; /* bg-red-50 */
-            border-left: 4px solid #ef4444; /* border-l-4 border-red-500 */
-            color: #7f1d1d; /* text-red-900 */
-            padding: 0.75rem 1rem; /* p-3 pl-4 */
-            margin-bottom: 0.5rem; /* mb-2 */
-            border-radius: 0 0.375rem 0.375rem 0; /* rounded-r-md */
-            font-size: 0.875rem; /* text-sm */
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            color: #7f1d1d;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0 0.375rem 0.375rem 0;
+            font-size: 0.875rem;
         }
         /* Status indicators */
-        .status-on { color: #16a34a; /* text-green-600 */ font-weight: 600; /* font-semibold */ }
-        .status-off { color: #dc2626; /* text-red-600 */ font-weight: 600; /* font-semibold */ }
-        .perf-indicator-up { color: #dc2626; /* text-red-600 */ } /* Over budget/plan */
-        .perf-indicator-down { color: #16a34a; /* text-green-600 */ } /* Under budget/plan */
+        .status-on { color: #16a34a; font-weight: 600; }
+        .status-off { color: #dc2626; font-weight: 600; }
+        .perf-indicator-up { color: #dc2626; }
+        .perf-indicator-down { color: #16a34a; }
         /* Table styling */
-        .styled-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .styled-table thead {
-            background-color: #f1f5f9; /* bg-slate-100 */
-            color: #475569; /* text-slate-600 */
-            font-size: 0.75rem; /* text-xs */
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-         .styled-table th, .styled-table td {
-            padding: 0.75rem 1rem; /* px-4 py-3 */
-            border-bottom: 1px solid #e2e8f0; /* border-b border-slate-200 */
-            text-align: left;
-         }
-         .styled-table th {
-            font-weight: 600; /* font-semibold */
-         }
-         .styled-table tbody tr:hover {
-            background-color: #f8fafc; /* hover:bg-slate-50 */
-         }
-         .styled-table .text-right { text-align: right; }
-         .styled-table .sortable:hover { cursor: pointer; background-color: #e2e8f0; }
+        .styled-table { width: 100%; border-collapse: collapse; }
+        .styled-table thead { background-color: #f1f5f9; color: #475569; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .styled-table th, .styled-table td { padding: 0.75rem 1rem; border-bottom: 1px solid #e2e8f0; text-align: left; white-space: nowrap; }
+        .styled-table th { font-weight: 600; }
+        .styled-table tbody tr:hover { background-color: #f8fafc; }
+        .styled-table .text-right { text-align: right; }
+        .styled-table .sortable:hover { cursor: pointer; background-color: #e2e8f0; }
 
          /* Icon placeholders */
-         .icon::before {
-            display: inline-block;
-            font-style: normal;
-            font-variant: normal;
-            text-rendering: auto;
-            -webkit-font-smoothing: antialiased;
-            /* Using simple text symbols as placeholders */
-            font-weight: bold;
-            margin-right: 0.5rem;
-            width: 1em; /* Ensure space */
-            text-align: center;
-         }
-         .icon-power::before { content: "⚡"; color: #f59e0b; } /* Amber */
-         .icon-temp::before { content: "🌡️"; color: #3b82f6; } /* Blue */
-         .icon-hvac::before { content: "❄️"; color: #0ea5e9; } /* Sky */
-         .icon-alert::before { content: "⚠️"; color: #ef4444; } /* Red */
-         .icon-energy::before { content: "💡"; color: #f59e0b; } /* Amber */
-         .icon-gas::before { content: "🔥"; color: #f97316; } /* Orange */
-         .icon-chart-pie::before { content: "📊"; color: #10b981; } /* Emerald */
-         .icon-chart-line::before { content: "📈"; color: #10b981; } /* Emerald */
-         .icon-performance::before { content: "🎯"; color: #8b5cf6; } /* Violet */
-         .icon-time::before { content: "⏱️"; color: #64748b; } /* Slate */
-         .icon-map::before { content: "🗺️"; color: #0ea5e9; } /* Sky */
-         .icon-list::before { content: "📋"; color: #64748b; } /* Slate */
-         .icon-ranking::before { content: "🏆"; color: #f59e0b; } /* Amber */
-         .icon-chart-bar::before { content: "📊"; color: #10b981; } /* Emerald */
+         .icon::before { display: inline-block; font-weight: bold; margin-right: 0.5rem; width: 1em; text-align: center; }
+         .icon-power::before { content: "⚡"; color: #f59e0b; }
+         .icon-temp::before { content: "🌡️"; color: #3b82f6; }
+         .icon-hvac::before { content: "❄️"; color: #0ea5e9; }
+         .icon-alert::before { content: "⚠️"; color: #ef4444; }
+         .icon-energy::before { content: "💡"; color: #f59e0b; }
+         .icon-gas::before { content: "🔥"; color: #f97316; }
+         .icon-chart-pie::before { content: "📊"; color: #10b981; }
+         .icon-chart-line::before { content: "📈"; color: #10b981; }
+         .icon-performance::before { content: "🎯"; color: #8b5cf6; }
+         .icon-time::before { content: "⏱️"; color: #64748b; }
+         .icon-map::before { content: "🗺️"; color: #0ea5e9; }
+         .icon-list::before { content: "📋"; color: #64748b; }
+         .icon-ranking::before { content: "🏆"; color: #f59e0b; }
+         .icon-chart-bar::before { content: "📊"; color: #10b981; }
 
     </style>
-     <!-- Link to Inter font (optional, depending on availability) -->
+     <!-- Link to Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 </head>
 <body class="bg-slate-100 p-4 sm:p-6 lg:p-8 font-sans">
 
-    <!-- Restaurant Manager Dashboard -->
-    <div class="mb-12">
-        <h1 class="text-2xl sm:text-3xl font-bold mb-6 border-b pb-3 text-gray-800">Restaurant Dashboard: <span class="font-semibold text-blue-700">IN-MH-MUM-MMR-0252-RohitDT Mall</span></h1>
+    <!-- I. Dashboard Components -->
+    <h1 class="text-3xl font-bold mb-6 text-gray-800 border-b pb-3">Dashboard Components</h1>
 
-        <!-- Section 1: Today's Snapshot -->
-        <h2 class="text-xl font-semibold mb-4 text-gray-700">Live Status (Illustrative)</h2>
+    <!-- A. Restaurant Manager Dashboard -->
+    <div class="mb-12">
+        <h2 class="text-2xl font-semibold mb-2 text-blue-700">A. Restaurant Manager Dashboard</h2>
+        <p class="text-sm text-gray-600 mb-6">Focuses on the immediate operational status and performance of one specific restaurant (e.g., IN-MH-MUM-MMR-0252-RohitDT Mall).</p>
+
+        <!-- Today's Snapshot -->
+        <h3 class="text-xl font-semibold mb-4 text-gray-700">Today's Snapshot (Near Real-Time from _LV)</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div class="card">
-                <h3 class="card-title"><span class="icon icon-power"></span>Power Load (kW)</h3>
-                <div class="placeholder-gauge my-3 text-sm">[Visual Gauge Here]</div>
-                <p class="kpi-value">28.7 kW</p> <!-- Example based on Jan 1st _DR Avg -->
-                <p class="kpi-subtext">(Source: EB)</p>
+                <h4 class="card-title"><span class="icon icon-power"></span>Current Power Load (kW)</h4>
+                <div class="card-content">
+                    <!-- Simple CSS Gauge -->
+                    <div class="gauge-container">
+                        <div class="gauge-fill" style="--gauge-percent: 51;"></div> <!-- Example: 51% full -->
+                        <div class="gauge-cover"></div>
+                    </div>
+                    <p class="kpi-value text-center">28.7 kW</p>
+                    <p class="kpi-subtext text-center">(Source: EB)</p>
+                </div>
             </div>
             <div class="card">
-                <h3 class="card-title"><span class="icon icon-temp"></span>Key Temperatures (°C)</h3>
-                <div class="space-y-2 mt-4 text-left">
-                    <p class="text-lg text-gray-700 flex justify-between">Kitchen: <span class="font-bold">34.1°C</span></p> <!-- Synthetic -->
-                    <p class="text-lg text-gray-700 flex justify-between">Lobby AC 3 Return: <span class="font-bold">25.6°C</span></p> <!-- Jan 1st _DR Avg -->
+                <h4 class="card-title"><span class="icon icon-temp"></span>Key Temperatures (°C)</h4>
+                <div class="card-content space-y-2 mt-4 text-left">
+                    <p class="text-lg text-gray-700 flex justify-between">Kitchen: <span class="font-bold">34.1°C</span></p>
+                    <p class="text-lg text-gray-700 flex justify-between">Lobby AC Return: <span class="font-bold">25.6°C</span></p>
                     <p class="text-lg text-gray-700 flex justify-between">Party Hall: <span class="font-bold text-orange-600">85.0°C</span></p>
                 </div>
             </div>
             <div class="card">
-                <h3 class="card-title"><span class="icon icon-hvac"></span>HVAC Status (Lobby AC 3)</h3>
-                 <div class="space-y-3 mt-4 text-left">
-                     <!-- Example - assuming it's running -->
+                <h4 class="card-title"><span class="icon icon-hvac"></span>HVAC Status</h4>
+                 <div class="card-content space-y-3 mt-4 text-left">
                      <p class="text-lg">Unit Status: <span class="status-on">ON</span></p>
                      <p class="text-lg">Compressor Status: <span class="status-on">ON</span></p>
                  </div>
             </div>
-            <div class="card">
-                <h3 class="card-title"><span class="icon icon-alert"></span>Active Critical Alerts</h3>
-                <div class="mt-4 max-h-40 overflow-y-auto pr-2">
-                     <!-- Synthetic Alert Example -->
+             <div class="card">
+                <h4 class="card-title"><span class="icon icon-alert"></span>Active Critical Alerts</h4>
+                <div class="card-content mt-4 max-h-40 overflow-y-auto pr-2">
                      <div class="alert-item">Lobby AC 3 - Return Temp High - 04:30 PM</div>
                      <p class="text-sm text-gray-500 italic mt-2">1 active critical alert.</p>
                 </div>
-                 <a href="#" class="text-blue-600 hover:underline text-xs mt-3 inline-block font-medium">View Full Alert Log &rarr;</a>
+                 <a href="#" class="text-blue-600 hover:underline text-xs mt-3 inline-block font-medium flex-shrink-0">View Full Alert Log &rarr;</a>
             </div>
         </div>
 
-        <!-- Section 2: Yesterday's Performance Summary -->
-        <h2 class="text-xl font-semibold mb-4 text-gray-700">Yesterday's Summary (Example: 2023-03-31)</h2>
+        <!-- Daily Performance Summary -->
+        <h3 class="text-xl font-semibold mb-4 text-gray-700">Daily Performance Summary (from _DR, _PB - Yesterday: 2023-03-31)</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="card">
-                <h3 class="card-title"><span class="icon icon-energy"></span>Energy Consumption</h3>
-                <p class="kpi-value">545.1 <span class="text-lg font-medium">kWh</span></p>
-                <p class="kpi-subtext">(EB: 545.1, DG: 0.0)</p>
-            </div>
-            <div class="card">
-                <h3 class="card-title"><span class="icon icon-gas"></span>LPG Consumption</h3>
-                 <!-- Synthetic Data -->
-                <p class="kpi-value">22.5 <span class="text-lg font-medium">Kgs</span></p>
-                 <p class="kpi-subtext">(Illustrative)</p>
-            </div>
-             <div class="card col-span-1 sm:col-span-2 lg:col-span-1">
-                 <h3 class="card-title"><span class="icon icon-chart-pie"></span>Energy Use: OPR vs NON</h3>
-                 <div class="placeholder-chart my-3 text-sm">[Donut Chart Visual]</div>
-                 <p class="text-sm text-gray-600 font-semibold">OPR: 73.8% | NON: 26.2%</p>
-                 <p class="text-sm text-red-600 font-medium mt-1">Non-OPR Waste: 142.5 kWh</p>
-            </div>
              <div class="card">
-                <h3 class="card-title"><span class="icon icon-performance"></span>Performance vs. Plan</h3>
-                <div class="mt-4 space-y-2 text-left">
-                    <p class="text-lg">Energy: <span class="perf-indicator-down font-bold">▼ Under</span> (-33 kWh)</p>
-                    <p class="text-lg">LPG:    <span class="perf-indicator-up font-bold">▲ Over</span> (+2.5 Kgs)</p> <!-- Synthetic -->
+                <h4 class="card-title"><span class="icon icon-energy"></span>Energy Consumption (kWh)</h4>
+                <div class="card-content">
+                    <p class="kpi-value">545.1</p>
+                    <p class="kpi-subtext">(EB: 545.1, DG: 0.0)</p>
                 </div>
             </div>
             <div class="card">
-                <h3 class="card-title"><span class="icon icon-time"></span>HVAC Run Time (Lobby AC 3)</h3>
-                <div class="mt-4 space-y-2 text-left">
-                     <!-- Using Jan 1st _DR data as proxy -->
+                <h4 class="card-title"><span class="icon icon-gas"></span>LPG Consumption (Kgs)</h4>
+                <div class="card-content">
+                     <!-- Synthetic Data -->
+                    <p class="kpi-value">22.5</p>
+                     <p class="kpi-subtext">(Illustrative)</p>
+                </div>
+            </div>
+             <div class="card">
+                 <h4 class="card-title"><span class="icon icon-chart-pie"></span>Energy Use: OPR vs NON</h4>
+                 <div class="card-content">
+                    <canvas id="oprNonOprChart" class="max-h-[150px] my-3"></canvas>
+                    <p class="text-sm text-red-600 font-medium mt-1 text-center">Non-OPR Waste: 142.5 kWh</p>
+                 </div>
+            </div>
+             <div class="card">
+                <h4 class="card-title"><span class="icon icon-performance"></span>Performance vs. Plan (Yesterday)</h4>
+                <div class="card-content mt-4 space-y-2 text-left">
+                    <p class="text-lg">Energy: <span class="perf-indicator-down font-bold">▼ Under</span> (-33 kWh)</p>
+                    <p class="text-lg">LPG:    <span class="perf-indicator-up font-bold">▲ Over</span> (+2.5 Kgs)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Trends -->
+        <h3 class="text-xl font-semibold mb-4 text-gray-700">Recent Trends (Last 7 Days from _DR - Illustrative)</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="card">
+                <h4 class="card-title"><span class="icon icon-chart-line"></span>Daily Energy (kWh)</h4>
+                <div class="card-content">
+                    <canvas id="dailyEnergyChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <h4 class="card-title"><span class="icon icon-chart-line"></span>Daily LPG (Kgs)</h4>
+                 <div class="card-content">
+                    <canvas id="dailyLpgChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                 <h4 class="card-title"><span class="icon icon-chart-line"></span>Daily Peak Demand (kW/KVA)</h4>
+                 <div class="card-content">
+                    <canvas id="dailyPeakDemandChart"></canvas>
+                 </div>
+            </div>
+        </div>
+
+        <!-- Equipment Health Indicators -->
+        <h3 class="text-xl font-semibold mb-4 text-gray-700">Equipment Health Indicators (Yesterday - from _DR, _HR summaries)</h3>
+         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+             <div class="card">
+                <h4 class="card-title"><span class="icon icon-time"></span>HVAC Run Time (Lobby AC 3)</h4>
+                <div class="card-content mt-4 space-y-2 text-left">
                     <p class="text-lg">Unit: <span class="font-bold">11.3 hrs</span></p>
                     <p class="text-lg">Compressor: <span class="font-bold">0.4 hrs</span></p>
                 </div>
             </div>
-             <div class="card col-span-1 sm:col-span-2 lg:col-span-2">
-                <h3 class="card-title"><span class="icon icon-time"></span>Key Equipment Run Time</h3>
-                <div class="mt-4 space-y-2 text-left">
-                     <!-- Using PB data as proxy for 'Machine' -->
+             <div class="card col-span-1 sm:col-span-2 lg:col-span-2"> <!-- Span 2 cols -->
+                <h4 class="card-title"><span class="icon icon-time"></span>Key Equipment Run Time</h4>
+                <div class="card-content mt-4 space-y-2 text-left">
                      <p class="text-lg">Machine (Main-2): <span class="font-bold">11.3 hrs</span></p>
-                     <p class="text-lg">Kitchen Exhaust: <span class="font-bold">14.5 hrs</span></p> <!-- Synthetic -->
+                     <p class="text-lg">Kitchen Exhaust: <span class="font-bold">14.5 hrs</span></p>
                      <p class="text-xs text-gray-500">(Specific equip mapping needed)</p>
                 </div>
             </div>
-        </div>
-
-        <!-- Section 3: Recent Trends -->
-        <h2 class="text-xl font-semibold mb-4 text-gray-700">Recent Trends (Last 7 Days - Illustrative)</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="card">
-                <h3 class="card-title"><span class="icon icon-chart-line"></span>Daily Energy (kWh)</h3>
-                <!-- Synthetic trend data description -->
-                <div class="placeholder-chart mt-3">[Line Chart Visual]<br>Trend: ~550-700 kWh/day<br>Weekend peaks visible</div>
-            </div>
-            <div class="card">
-                <h3 class="card-title"><span class="icon icon-chart-line"></span>Daily LPG (Kgs)</h3>
-                 <!-- Synthetic trend data description -->
-                 <div class="placeholder-chart mt-3">[Line Chart Visual]<br>Trend: ~20-25 Kgs/day</div>
-            </div>
-            <div class="card">
-                 <h3 class="card-title"><span class="icon icon-chart-line"></span>Daily Peak Demand (kW/KVA)</h3>
-                 <!-- Synthetic trend data description -->
-                <div class="placeholder-chart mt-3">[Line Chart Visual]<br>Peak: ~50-60 kW daily</div>
-            </div>
-        </div>
+            <!-- Add another card if needed -->
+         </div>
     </div>
 
-    <!-- Area/Regional Manager Dashboard -->
+    <!-- B. Area/Regional Manager Dashboard -->
     <div class="mt-12 card p-0"> <!-- Card for overall container -->
          <div class="px-6 pt-6 pb-3 border-b border-slate-200">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Area/Regional Manager Dashboard: <span class="font-semibold text-blue-700">[Region Name]</span></h1>
+            <h2 class="text-2xl font-semibold mb-2 text-blue-700">B. Area/Regional Manager Dashboard</h2>
+            <p class="text-sm text-gray-600 mb-2">Focuses on comparing performance and identifying outliers across multiple restaurants.</p>
          </div>
 
-        <!-- Section 1: Regional Overview -->
+        <!-- Regional Overview -->
         <div class="p-6">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">Regional Overview (Sample Data from Mar 2023)</h2>
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Regional Overview (MTD from _MP, _PB, _MD - Sample Mar 1st)</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                 <div class="card lg:col-span-2 !p-3"> <!-- Override card padding -->
-                     <h3 class="card-title mb-2"><span class="icon icon-map"></span>Site Status Map</h3>
+                 <div class="card lg:col-span-2 !p-3">
+                     <h4 class="card-title mb-2"><span class="icon icon-map"></span>Site Status Map</h4>
                      <div class="placeholder-map min-h-[200px]">[Interactive Map Visualization]</div>
                 </div>
                 <div class="card space-y-3">
-                     <h3 class="card-title"><span class="icon icon-chart-bar"></span>Regional KPIs (MTD)</h3>
-                     <!-- Synthetic Aggregations -->
+                     <h4 class="card-title"><span class="icon icon-chart-bar"></span>Regional KPIs (MTD)</h4>
                      <p class="text-lg">Total Energy: <span class="font-bold text-blue-700">~150,500 kWh</span></p>
                      <p class="text-lg">Total LPG: <span class="font-bold text-blue-700">~5,200 Kgs</span></p>
                      <p class="text-lg">Data Gaps (Mar 1): <span class="font-bold text-red-600">2 Sites</span></p>
                      <p class="text-lg">Avg. Non-OPR Waste: <span class="font-bold text-orange-600">~18%</span></p>
                 </div>
                  <div class="card">
-                    <h3 class="card-title"><span class="icon icon-alert"></span>Alert Summary</h3>
-                    <div class="mt-3 space-y-2 text-sm">
-                        <!-- Synthetic Counts -->
+                    <h4 class="card-title"><span class="icon icon-alert"></span>Alert Summary</h4>
+                    <div class="card-content mt-3 space-y-2 text-sm">
                         <p>Total Active Alerts: <span class="font-bold text-orange-600">5</span></p>
                         <p class="font-medium mt-2">Critical Alerts by Site:</p>
                         <ul class="list-disc list-inside text-xs pl-2 max-h-24 overflow-y-auto">
@@ -285,12 +313,12 @@
             </div>
         </div>
 
-        <!-- Section 2: Ranking & Comparison -->
+        <!-- Restaurant Ranking & Comparison -->
         <div class="px-6">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">Restaurant Ranking & Comparison (MTD - Sample Mar 1st)</h2>
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Restaurant Ranking & Comparison (MTD from _MP, _PB, _MD - Sample Mar 1st)</h3>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <div class="card overflow-hidden p-0">
-                    <h3 class="card-title px-6 pt-6 pb-2"><span class="icon icon-ranking"></span>Energy Performance (KVAH)</h3>
+                    <h4 class="card-title px-6 pt-6 pb-2"><span class="icon icon-ranking"></span>Energy Performance (KVAH)</h4>
                     <div class="overflow-x-auto">
                         <table class="styled-table">
                             <thead>
@@ -302,7 +330,6 @@
                                 </tr>
                             </thead>
                             <tbody class="text-sm">
-                                <!-- Existing + Synthetic Data -->
                                 <tr >
                                     <td class="font-medium">...0254-LB Nagar</td>
                                     <td class="text-right">477.4</td>
@@ -317,28 +344,28 @@
                                 </tr>
                                  <tr>
                                     <td class="font-medium">...0007-Cross Road</td>
-                                    <td class="text-right">~1034</td> <!-- From PB -->
+                                    <td class="text-right">~1034</td>
                                     <td class="text-right">N/A</td>
-                                    <td class="text-right">~33%</td> <!-- From PB -->
+                                    <td class="text-right">~33%</td>
                                 </tr>
                                  <tr>
                                     <td class="font-medium">...0211-Adyar</td>
-                                    <td class="text-right">~746</td> <!-- From PB (using kWh as proxy) -->
-                                    <td class="text-right perf-indicator-down">+4 ▼</td> <!-- From PB -->
-                                    <td class="text-right">~18%</td> <!-- From PB -->
+                                    <td class="text-right">~746</td>
+                                    <td class="text-right perf-indicator-down">+4 ▼</td>
+                                    <td class="text-right">~18%</td>
                                 </tr>
                                  <tr>
                                     <td class="font-medium">...0108-Pegasus</td>
-                                    <td class="text-right">~90</td> <!-- From PB (using kWh as proxy) -->
+                                    <td class="text-right">~90</td>
                                     <td class="text-right">N/A</td>
-                                    <td class="text-right">~28%</td> <!-- From PB -->
+                                    <td class="text-right">~28%</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
                  <div class="card overflow-hidden p-0">
-                    <h3 class="card-title px-6 pt-6 pb-2"><span class="icon icon-ranking"></span>LPG Consumption (Kgs)</h3>
+                    <h4 class="card-title px-6 pt-6 pb-2"><span class="icon icon-ranking"></span>LPG Consumption (Kgs)</h4>
                      <div class="overflow-x-auto">
                         <table class="styled-table">
                              <thead>
@@ -359,7 +386,6 @@
                                     <td class="text-right">17.1</td>
                                     <td class="text-right perf-indicator-up">-1.4 ▲</td>
                                 </tr>
-                                <!-- Synthetic Rows -->
                                  <tr>
                                     <td class="font-medium">...0007-Cross Road</td>
                                     <td class="text-right">25.2</td>
@@ -382,33 +408,169 @@
             </div>
         </div>
 
-         <!-- Section 3: Benchmarking & Status -->
-         <div class="p-6">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">Benchmarking & Status (Sample Day: 2023-01-01 / Mar 1st)</h2>
+        <!-- Key Equipment Benchmarking -->
+        <div class="p-6">
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Key Equipment Benchmarking (MTD from _DR, _MD summaries - Illustrative)</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                  <div class="card">
-                    <h3 class="card-title"><span class="icon icon-chart-bar"></span>Avg. Daily HVAC Compressor Run Time</h3>
-                    <div class="placeholder-chart mt-3">[Bar Chart Visual]<br>RohitDT Mall: 0.4 hrs<br>LB Nagar: ~1.5 hrs<br>Jubilee Hills: ~1.2 hrs</div> <!-- Added synthetic -->
+                    <h4 class="card-title"><span class="icon icon-chart-bar"></span>Avg. Daily HVAC Compressor Run Time</h4>
+                    <div class="card-content">
+                        <canvas id="hvacRunTimeChart"></canvas>
+                    </div>
                 </div>
                 <div class="card">
-                     <h3 class="card-title"><span class="icon icon-chart-bar"></span>Avg. Daily Kitchen Equip. kWh</h3>
-                    <div class="placeholder-chart mt-3">[Bar Chart Visual]<br>RohitDT Mall: 360 kWh<br>LB Nagar: ~400 kWh<br>Jubilee Hills: ~380 kWh</div> <!-- Added synthetic -->
+                     <h4 class="card-title"><span class="icon icon-chart-bar"></span>Avg. Daily Kitchen Equip. kWh</h4>
+                     <div class="card-content">
+                        <canvas id="kitchenEnergyChart"></canvas>
+                    </div>
                 </div>
                  <div class="card">
-                    <h3 class="card-title"><span class="icon icon-list"></span>Communication Status (Mar 1st)</h3>
-                    <ul class="list-disc list-inside text-sm mt-3 max-h-40 overflow-y-auto pr-2 space-y-1">
-                        <li class="text-red-600">IN-MH-PUN-MMR-0358...: <span class="font-semibold">Data Gap (165)</span></li>
-                        <li class="text-red-600">IN-KA-BGL-SOU-0066...: <span class="font-semibold">Data Gap (568)</span></li>
-                        <li>IN-MH-MUM-MMR-0275...: OK</li>
-                        <li>IN-GJ-AHM-ROW-0337...: OK</li>
-                        <li>IN-TN-CHN-SOU-0154...: OK</li>
-                         <li>(Showing top 5)</li>
-                    </ul>
+                    <h4 class="card-title"><span class="icon icon-list"></span>Communication Status (Mar 1st)</h4>
+                    <div class="card-content">
+                        <ul class="list-disc list-inside text-sm mt-3 max-h-40 overflow-y-auto pr-2 space-y-1">
+                            <li class="text-red-600">IN-MH-PUN-MMR-0358...: <span class="font-semibold">Data Gap (165)</span></li>
+                            <li class="text-red-600">IN-KA-BGL-SOU-0066...: <span class="font-semibold">Data Gap (568)</span></li>
+                            <li>IN-MH-MUM-MMR-0275...: OK</li>
+                            <li>IN-GJ-AHM-ROW-0337...: OK</li>
+                            <li>IN-TN-CHN-SOU-0154...: OK</li>
+                             <li>(Showing top 5)</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Script to Render Charts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctxOprNonOpr = document.getElementById('oprNonOprChart')?.getContext('2d');
+            const ctxDailyEnergy = document.getElementById('dailyEnergyChart')?.getContext('2d');
+            const ctxDailyLpg = document.getElementById('dailyLpgChart')?.getContext('2d');
+            const ctxDailyPeak = document.getElementById('dailyPeakDemandChart')?.getContext('2d');
+            const ctxHvacRun = document.getElementById('hvacRunTimeChart')?.getContext('2d');
+            const ctxKitchenEnergy = document.getElementById('kitchenEnergyChart')?.getContext('2d');
+
+            // --- Restaurant Manager Charts ---
+
+            // 1. Opr vs Non-Opr Doughnut Chart
+            if (ctxOprNonOpr) {
+                new Chart(ctxOprNonOpr, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Operating Hours (73.8%)', 'Non-Operating Hours (26.2%)'],
+                        datasets: [{
+                            label: 'Energy Use (kWh)',
+                            data: [402.6, 142.5], // From PB DayOpr/DayNonOpr for 2016000001 on 2023-03-31
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.7)', // Blue for Operating
+                                'rgba(255, 99, 132, 0.7)'  // Red for Non-Operating
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 99, 132, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }
+                    }
+                });
+            }
+
+            // 2. Daily Energy Line Chart (Illustrative 7 days)
+            if (ctxDailyEnergy) {
+                new Chart(ctxDailyEnergy, {
+                    type: 'line',
+                    data: {
+                        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Yesterday'], // Replace with actual dates
+                        datasets: [{
+                            label: 'Total Energy (kWh)',
+                            data: [650, 680, 710, 690, 720, 700, 545.1], // Illustrative + Yesterday's value
+                            borderColor: 'rgb(75, 192, 192)',
+                            tension: 0.1,
+                            fill: false
+                        }]
+                    },
+                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false } } }
+                });
+            }
+
+            // 3. Daily LPG Line Chart (Illustrative 7 days)
+            if (ctxDailyLpg) {
+                 new Chart(ctxDailyLpg, {
+                    type: 'line',
+                    data: {
+                        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Yesterday'],
+                        datasets: [{
+                            label: 'LPG (Kgs)',
+                            data: [21, 23, 22, 24, 23.5, 21.5, 22.5], // Illustrative
+                            borderColor: 'rgb(255, 159, 64)',
+                            tension: 0.1,
+                            fill: false
+                        }]
+                    },
+                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false } } }
+                });
+            }
+
+             // 4. Daily Peak Demand Line Chart (Illustrative 7 days)
+            if (ctxDailyPeak) {
+                 new Chart(ctxDailyPeak, {
+                    type: 'line',
+                    data: {
+                        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Yesterday'],
+                        datasets: [{
+                            label: 'Peak Demand (kW)',
+                            data: [52, 55, 58, 56, 59, 57, 55.3], // Illustrative + Yesterday's max from _DR
+                            borderColor: 'rgb(255, 99, 132)',
+                            tension: 0.1,
+                            fill: false
+                        }]
+                    },
+                    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false } } }
+                });
+            }
+
+            // --- Regional Manager Charts ---
+
+            // 5. HVAC Run Time Bar Chart (Illustrative)
+            if (ctxHvacRun) {
+                new Chart(ctxHvacRun, {
+                    type: 'bar',
+                    data: {
+                        labels: ['...RohitDT', '...LB Nagar', '...Jubilee Hills', '...Cross Road', '...Adyar'], // Shortened site names
+                        datasets: [{
+                            label: 'Avg Daily Compressor Runtime (hrs)',
+                            data: [0.4, 1.5, 1.2, 2.1, 1.8], // Illustrative Data
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                        }]
+                    },
+                    options: { responsive: true, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
+                });
+            }
+
+             // 6. Kitchen Energy Bar Chart (Illustrative)
+            if (ctxKitchenEnergy) {
+                 new Chart(ctxKitchenEnergy, {
+                    type: 'bar',
+                    data: {
+                        labels: ['...RohitDT', '...LB Nagar', '...Jubilee Hills', '...Cross Road', '...Adyar'],
+                        datasets: [{
+                            label: 'Avg Daily Kitchen Equip (kWh)',
+                            data: [360, 400, 380, 450, 410], // Illustrative Data
+                            backgroundColor: 'rgba(255, 159, 64, 0.6)'
+                        }]
+                    },
+                    options: { responsive: true, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
+                });
+            }
+
+        });
+    </script>
+
 </body>
 </html>
-
